@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -15,17 +17,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
     private TextView mTextView;
+    private Spinner spinnerRangos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextView = findViewById(R.id.textView);
+        //Spinner
+        spinnerRangos = (Spinner) findViewById(R.id.spinner_rango);
+        ArrayList<Integer> rangos  = new ArrayList<Integer>();
+        rangos.add(1);
+        rangos.add(5);
+        rangos.add(10);
+        rangos.add(25);
+        ArrayAdapter<Integer> dataAdapterRangos = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, rangos);
+        dataAdapterRangos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRangos.setAdapter(dataAdapterRangos);
+
+        //TextView
+        mTextView = findViewById(R.id.text_state);
 
         Button buttonTimePicker = findViewById(R.id.button_timepicker);
         buttonTimePicker.setOnClickListener(new View.OnClickListener() {
@@ -51,13 +68,19 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         c.set(Calendar.HOUR_OF_DAY, hourOfDay);
         c.set(Calendar.MINUTE, minute);
         c.set(Calendar.SECOND, 0);
-
+        int rango = Integer.parseInt(this.spinnerRangos.getSelectedItem().toString());
+        int operator = this.getRandomNumberInRange(0, rango);
+        if(Math.random() < 0.5){
+            c.add(Calendar.MINUTE, operator);
+        }else{
+            c.add(Calendar.MINUTE, -operator);
+        }
         updateTimeText(c);
         startAlarm(c);
     }
 
     private void updateTimeText(Calendar c) {
-        String timeText = "Alarm set for: ";
+        String timeText = "Alarma para: ";
         timeText += DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
 
         mTextView.setText(timeText);
@@ -82,5 +105,15 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
 
         alarmManager.cancel(pendingIntent);
         mTextView.setText("Alarm canceled");
+    }
+
+    private int getRandomNumberInRange(int min, int max) {
+
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
     }
 }
