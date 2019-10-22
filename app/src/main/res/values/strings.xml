@@ -3,4 +3,5 @@
     <string name="no_alarma">No hay alarma seteada</string>
     <string name="abrir_time_picker">Abrir TimePicker</string>
     <string name="cancelar_alarma">Cancelar Alarma</string>
+    <string name="rango_tiempo">Rango para Alarma</string>
 </resources>
