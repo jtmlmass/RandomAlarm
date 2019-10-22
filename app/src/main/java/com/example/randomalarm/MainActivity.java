@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         //Spinner
         spinnerRangos = (Spinner) findViewById(R.id.spinner_rango);
         ArrayList<Integer> rangos  = new ArrayList<Integer>();
+        rangos.add(0);
         rangos.add(1);
         rangos.add(5);
         rangos.add(10);
@@ -95,7 +96,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
             c.add(Calendar.DATE, 1);
         }
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        //alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), 5*1000,pendingIntent);
     }
 
     private void cancelAlarm() {
